@@ -76,6 +76,14 @@ const Home: NextPage = () => {
     const isValidURL = (str: string) => {
       try {
         new URL(str);
+        //make sure that the url is only one word
+        if (str.split(" ").length > 1) {
+          return false;
+        }
+        // //make sure that the url is not a file
+        // if (str.split(".").length > 1) {
+        //   return false;
+        // }
         return true;
       } catch (error) {
         return false;
@@ -216,20 +224,31 @@ const Home: NextPage = () => {
   return (
     <div className="dark:bg-[#111a31] bg-gray-50">
       <div className="">
-        <div className="w-full md:text-lg text-xs bg-[#7721c1] text-center hover:cursor-pointer font-semibold text-white h-8 items-center z-10">
-          Built by @michael_chomsky & Sponsored By{" "}
+        <div className="w-full md:text-lg text-xs bg-[#7721c1] text-center hover:cursor-pointer font-semibold text-white h-12 items-center z-10 flex justify-center">
+          <div>
+          {/* Built by @michael_chomsky & Sponsored By{" "} */}
+          Built by{" "}
+          <a
+            href="https://twitter.com/michael_chomsky"
+            target="_blank"
+            className="text-white hover:cursor-pointer underline md:text-xl text-md w-full">
+            michael_chomsky
+          </a>
+          {" "}& Sponsored By{" "}... 
           <a
             href="mailto: contact@siteexplainer.com"
             className="text-white hover:cursor-pointer underline md:text-xl text-md w-full">
-            ... you? {" "}
+            you
           </a>
+          ? {" "}
           👉👈
+        </div>
         </div>
       </div>
       <div>
         <Toaster />
       </div>
-      <div className="flex max-w-5xl mx-auto flex-col items-center justify-center min-h-screen">
+      <div className="flex max-w-5xl mx-auto flex-col items-center justify-center min-h-screen flex max-w-5xl mx-auto flex-col items-center justify-center py-2 min-h-screen" >
         <Head>
           <title>SiteExplainer</title>
           <link rel="icon" href="/favicon.ico" />
@@ -418,8 +437,9 @@ const Home: NextPage = () => {
           </ResizablePanel>
         </main>
         <Faq />
+        <Footer />
       </div>
-      <Footer />
+  
     </div>
   );
 };
