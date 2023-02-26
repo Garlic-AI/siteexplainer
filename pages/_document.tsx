@@ -11,14 +11,14 @@ class MyDocument extends Document {
             name="description"
             content="Explain any confusing landing page in seconds."
           />
-          <meta property="og:site_name" content="twitterbio.com" />
+          <meta property="og:site_name" content="siteexplainer.com" />
           <meta
             property="og:description"
             content="Explain any confusing landing page in seconds."
           />
-          <meta property="og:title" content="Twitter Bio Generator" />
+          <meta property="og:title" content="AI Landing Page Explainer" />
           <meta name="twitter:card" content="summary_large_image" />
-          <meta name="twitter:title" content="Twitter Bio Generator" />
+          <meta name="twitter:title" content="AI Landing Page Explainer" />
           <meta
             name="twitter:description"
             content="Explain any confusing landing page in seconds."

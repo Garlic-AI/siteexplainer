@@ -80,10 +80,7 @@ const Home: NextPage = () => {
         if (str.split(" ").length > 1) {
           return false;
         }
-        // //make sure that the url is not a file
-        // if (str.split(".").length > 1) {
-        //   return false;
-        // }
+
         return true;
       } catch (error) {
         return false;
@@ -93,6 +90,10 @@ const Home: NextPage = () => {
     let fullUrl = recentURL.trim();
     if (!/^https?:\/\//i.test(fullUrl)) {
       fullUrl = "https://" + fullUrl;
+    }
+    //remove trailing slash if it exists
+    if (fullUrl[fullUrl.length - 1] === "/") {
+      fullUrl = fullUrl.slice(0, -1);
     }
 
     console.log(fullUrl);
