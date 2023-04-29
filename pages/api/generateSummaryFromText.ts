@@ -23,7 +23,7 @@ const handler = async (req: Request): Promise<Response> => {
   try {
     
 
-    const prompt = `You are given a website's entire content without any formatting, including extraneous text like 'home', 'login', and 'contact' etc. Ignore those sections and focus on the main content of the website. What is the website about and what are its intentions? Try to figure out the main content of the website, and explain it using simplified language that a 10-year-old would understand. DO NOT use existing text from the website, but explain it in your own words. Make not to leave out any information that might be pertinent to a reader.
+    const prompt = `You are given a website's entire content without any formatting, including extraneous text like 'home', 'login', and 'contact' etc. Ignore those sections and focus on the main content of the website. What is the website about and what are its intentions? Try to figure out the main content of the website, and explain it using simplified language that a 10-year-old would understand. DO NOT use existing text from the website, but explain it in your own words. Make sure not to leave out any information that might be pertinent to a reader.
 
   "${content}"
 
