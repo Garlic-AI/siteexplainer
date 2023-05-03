@@ -237,7 +237,7 @@ const Home: NextPage = () => {
           </a>
           {" "}& Sponsored By{" "}... 
           <a
-            href="https://docs.google.com/forms/d/e/1FAIpQLSfUa3qfg05zRupFY07D2AAEmw3it_Pfs3uc6su4gtkuP2UE4g/viewform"
+            href="https://docs.google.com/forms/d/e/1FAIpQLSfUa3qfg05zRupFY07D2AAEmw3it_Pfs3uc6su4gtkuP2UE4g/viewform?usp=sf_link"
             className="text-white hover:cursor-pointer underline md:text-xl text-md w-full">
             you
           </a>
