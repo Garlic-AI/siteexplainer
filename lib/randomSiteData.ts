@@ -9,7 +9,6 @@ export const randomSiteData: string[] = [
     'https://hubspot.com',
     'https://infusionsoft.com',
     'https://salesforce.com',
-    'https://marketo.com',
     'https://act-on.com',
     'https://pardot.com',
     'https://pipedrive.com',
@@ -18,9 +17,10 @@ export const randomSiteData: string[] = [
     'https://hootsuite.com',
     'https://buffer.com',
     'https://mailchimp.com',
-    'https://constantcontact.com',
     'https://aweber.com',
     'https://getresponse.com',
     'https://activecampaign.com',
-    'https://mailerlite.com'
+    'https://mailerlite.com',
+    'https://slangthesaurus.com/translator',
+    'https://bestai.fyi',
     ]
