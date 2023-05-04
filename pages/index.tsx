@@ -226,24 +226,26 @@ const Home: NextPage = () => {
     <div className="dark:bg-[#111a31] bg-gray-50">
       <div className="">
         <div className="w-full md:text-lg text-xs bg-[#7721c1] text-center hover:cursor-pointer font-semibold text-white h-12 items-center z-10 flex justify-center">
-            <div>
-              {/* Built by @michael_chomsky */}
-              Built by{" "}
-              <a
-                href="https://twitter.com/michael_chomsky"
-                target="_blank"
-                className="text-white hover:cursor-pointer underline md:text-xl text-md w-full">
-                michael_chomsky
-              </a>
-              {" "}
-              {/* Updated text and link */}
-              Looking for a similar tool for yourself or your business?{" "}
-              <a
-                href="https://docs.google.com/forms/d/e/1FAIpQLSfUa3qfg05zRupFY07D2AAEmw3it_Pfs3uc6su4gtkuP2UE4g/viewform?usp=sf_link"
-                className="text-white hover:cursor-pointer underline md:text-xl text-md w-full">
-                Reach out here and we'll build it
-              </a>
-            </div>
+          <div className="px-2"> {/* Add padding to the container */}
+            {/* Built by @michael_chomsky */}
+            Built by{" "}
+            <a
+              href="https://twitter.com/michael_chomsky"
+              target="_blank"
+              className="text-white hover:cursor-pointer underline md:text-lg text-xs"> {/* Adjust font size */}
+              michael_chomsky
+            </a>
+            {" "}
+            {/* Updated text and link */}
+            <span className="mx-1"> {/* Add margin to the text */}
+              Looking for a similar tool for yourself or your business?
+            </span>
+            <a
+              href="https://docs.google.com/forms/d/e/1FAIpQLSfUa3qfg05zRupFY07D2AAEmw3it_Pfs3uc6su4gtkuP2UE4g/viewform?usp=sf_link"
+              className="text-white hover:cursor-pointer underline md:text-lg text-xs"> {/* Adjust font size */}
+              Reach out here and we'll build it
+            </a>
+          </div>
         </div>
       </div>
       <div>
