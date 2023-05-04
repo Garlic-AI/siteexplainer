@@ -1,8 +1,8 @@
-# [TwitterBio.com](https://www.twitterbio.com/)
+# [SiteExplainer.com](https://www.siteexplainer.com/)
 
 This project generates Twitter bios for you using AI.
 
-[![Twitter Bio Generator](./public/screenshot.png)](https://www.twitterbio.com)
+[![Website Landing Page Explainer](./public/screenshot.png)](https://www.siteexplainer.com)
 
 ## How it works
 
@@ -25,3 +25,5 @@ npm run dev
 Deploy the example using [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=vercel-examples):
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/Nutlope/twitterbio&env=OPENAI_API_KEY&project-name=twitter-bio-generator&repo-name=twitterbio)
+
+## This version uses a pgsql database to cache results, so remove that code if you don't need it. I'd make it optional, but please submit a PR if you need that feature or if you would like to contribute. This site gets around 100 requests per day, so it's not a big deal.
