@@ -261,7 +261,7 @@ const Home: NextPage = () => {
         </div>
         <main className="flex z-10 flex-1 w-full flex-col items-center justify-center text-center px-4 mt-12 sm:mt-20">
           <h1 className="mx-auto mt-10 md:mt-24 z-2 max-w-4xl font-bold text-3xl tracking-tight text-slate-900 sm:text-6xl dark:text-white">
-            Simplify Complex Websites with{" "}
+            Instantly Understand Any Website's Purpose with{" "}
             <span className="relative whitespace-nowrap text-blue-600">
               <svg
                 aria-hidden="true"
@@ -272,7 +272,7 @@ const Home: NextPage = () => {
               </svg>
               <span className="relative">SiteExplainer</span>
             </span>{" "}
-            Say Goodbye to Confusing Pages.
+            Pages.
           </h1>
           <Link
             href="https://github.com/MichaelAPCS/siteexplainer"
