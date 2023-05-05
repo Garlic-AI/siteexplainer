@@ -18,6 +18,7 @@ import Link from "next/link";
 import Faq from "../components/Faq";
 import { FcSearch } from "react-icons/fc";
 import Marquee from "react-fast-marquee";
+import FuturePedia from "../components/FuturePedia";
 
 const Home: NextPage = () => {
   const [loading, setLoading] = useState(false);
@@ -261,6 +262,7 @@ const Home: NextPage = () => {
         <div className={"z-0"}>
           <BackgroundCircles />
         </div>
+
         <main className="flex z-10 flex-1 w-full flex-col items-center justify-center text-center px-4 mt-12 sm:mt-20">
           <h1 className="mx-auto mt-10 md:mt-24 z-2 max-w-4xl font-bold text-3xl tracking-tight text-slate-900 sm:text-6xl dark:text-white">
             Instantly Understand Any Website's Purpose with{" "}
@@ -438,6 +440,7 @@ const Home: NextPage = () => {
             )}
           </ResizablePanel>
         </main>
+        <FuturePedia />
         <Faq />
         <Footer />
       </div>
