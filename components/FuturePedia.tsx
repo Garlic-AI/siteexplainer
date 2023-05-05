@@ -5,7 +5,7 @@ const FuturePedia = () => {
     <div className="relative mt-10 m-5">
       <div className="top-0 right-3">
         <a
-          href="https://www.futurepedia.com/support-us"
+          href="https://www.futurepedia.io/tool/siteexplainer"
           target="_blank"
           rel="noopener noreferrer"
           className="block border border-gray-300 rounded-lg p-4 shadow-md bg-white hover:shadow-lg transition-shadow duration-200"

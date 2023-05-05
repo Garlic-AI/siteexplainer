@@ -85,7 +85,7 @@ const data = [
     question: "Can my product be featured on this site?",
     answer:
       "Yes! Just send an email to contact@siteexplainer.com to discuss sponsorships and partnerships. This site is VERY expensive to run so I appreciate the help!",
-  },
+  }
 ];
 
 export default Faq;
