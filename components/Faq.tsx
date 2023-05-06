@@ -57,6 +57,11 @@ const data = [
       "SiteExplainer is designed to help visitors understand complex content and technical language used on websites. It saves time and makes it easier to navigate through confusing landing pages. Using SiteExplainer can help visitors quickly identify the most relevant information on a website.",
   },
   {
+    question: "I really want your data. Can I scrape you? Do you have an API?",
+    answer:
+      "Whatever it is that you need, please come to us before attempting to scrape our site. We cache summaries, so we can sell you our dataset of 10s of thousands of pages. If you have your own set of pages, we can scrape them for you. And if you really need an API, we'll build it. Despite the phrasing in this FAQ (I refer to the maintainers of this site as 'we', but it is run by one person, and scraping the site is very hard on the wallet. I'm looking at you 59.1x2.xxx.xxx.xxx).  ",
+  },
+  {
     question: "Is SiteExplainer free to use?",
     answer:
       "Yes, SiteExplainer is completely free to use. However, the website is open to sponsorship, and donations are welcome to support the project.",
