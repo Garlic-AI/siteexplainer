@@ -1,5 +1,6 @@
 // import { Page } from '@prisma/client'
 // import { prisma } from '../../lib/prisma'
+import { ipAddress } from "@vercel/edge";
 import { OpenAIStream, OpenAIStreamPayload } from "../../utils/OpenAIStream";
 
 if (!process.env.OPENAI_API_KEY) {
@@ -48,7 +49,9 @@ const handler = async (req: Request): Promise<Response> => {
       n: 1,
   };
 
-    const stream = await OpenAIStream(payload);
+    const clientIpAddress = ipAddress(req) || 'unknown';
+
+    const stream = await OpenAIStream(payload, clientIpAddress);
     return new Response(stream);
   } catch (e: any) {
     console.log({ e });
