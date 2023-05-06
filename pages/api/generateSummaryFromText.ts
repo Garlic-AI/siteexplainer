@@ -32,7 +32,7 @@ const handler = async (req: Request): Promise<Response> => {
     - Include all important information that a reader should know.
     - Write a detailed summary that is no longer than 200 words.\n
     The content of the website is provided below:\n
-      "\${content}"\n
+      "${content}"n
     Now, write your summary. A person reading your summary should instantly understand the purpose of the website.`;
     
     

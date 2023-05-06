@@ -122,7 +122,7 @@ export async function OpenAIStream(payload: OpenAIStreamPayload, ipAddress: stri
       Authorization: `Bearer ${OPENAI_API_KEY ?? ""}`,
       "Helicone-Auth": `Bearer ${HELICONE_API_KEY}`,
       "Helicone-Property-IP": ipAddress, // Include the IP address in the request headers
-      "Helicone-RateLimit-Policy": rateLimitPolicy, // Include the rate limiting policy in the request headers
+      // "Helicone-RateLimit-Policy": rateLimitPolicy, // Include the rate limiting policy in the request headers
     },
     method: "POST",
     body: JSON.stringify(payload),
