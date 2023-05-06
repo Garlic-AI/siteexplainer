@@ -57,7 +57,7 @@ const Home: NextPage = () => {
     generateSummary(url);
   }
 
-  const postSummary = (url: string, summary: string) => {
+  const postSummary = (url: string, summary: string, site_text: string) => {
     fetch("/api/postSummary", {
       method: "POST",
       headers: {
@@ -66,6 +66,7 @@ const Home: NextPage = () => {
       body: JSON.stringify({
         url: url,
         summary: summary,
+        site_text: site_text,
       }),
     }).then(() => fetchLatestSites());
   };
@@ -198,7 +199,7 @@ const Home: NextPage = () => {
           console.log("summary is ", newGeneratedSummary);
 
           if (done && newGeneratedSummary.length >= 50) {
-            postSummary(fullUrl, newGeneratedSummary);
+            postSummary(fullUrl, newGeneratedSummary, siteContent);
           }
           return newGeneratedSummary;
         });

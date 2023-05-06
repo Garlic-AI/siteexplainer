@@ -26,7 +26,7 @@ import { prisma } from '../../lib/prisma';
 
 export default async function createSummary(req: any, res: any) {
   try {
-    const { url, summary } = req.body;
+    const { url, summary, site_text } = req.body;
 
     // Validate user input
     if (!url || !summary) {
@@ -40,7 +40,7 @@ export default async function createSummary(req: any, res: any) {
     }
 
     // Create new summary
-    const result = await prisma.page.create({ data: { url, summary } });
+    const result = await prisma.page.create({ data: { url, summary, site_text } });
     res.status(201).json(result);
   } catch (error) {
     // Handle errors

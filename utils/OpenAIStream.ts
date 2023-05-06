@@ -98,16 +98,35 @@ export interface OpenAIStreamPayload {
   n: number;
 }
 
+
+const HELICONE_API_KEY = process.env.HELICONE_API_KEY;
+
+// Define the OpenAI API key
+const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+
+// Define the Helicone base URL
+const HELICONE_BASE_URL = "https://oai.hconeai.com/v1";
+
 export async function OpenAIStream(payload: OpenAIStreamPayload) {
   const encoder = new TextEncoder();
   const decoder = new TextDecoder();
 
   let counter = 0;
 
-  const res = await fetch("https://api.openai.com/v1/chat/completions", {
+  // const res = await fetch("https://api.openai.com/v1/chat/completions", {
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //     Authorization: `Bearer ${process.env.OPENAI_API_KEY ?? ""}`,
+  //   },
+  //   method: "POST",
+  //   body: JSON.stringify(payload),
+  // });
+
+  const res = await fetch(`${HELICONE_BASE_URL}/chat/completions`, {
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${process.env.OPENAI_API_KEY ?? ""}`,
+      Authorization: `Bearer ${OPENAI_API_KEY ?? ""}`,
+      "Helicone-Auth": `Bearer ${HELICONE_API_KEY}`,
     },
     method: "POST",
     body: JSON.stringify(payload),

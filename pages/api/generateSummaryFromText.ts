@@ -23,12 +23,18 @@ const handler = async (req: Request): Promise<Response> => {
   try {
     
 
-    const prompt = `You are given a website's entire content without any formatting, including extraneous text like 'home', 'login', and 'contact' etc. Ignore those sections and focus on the main content of the website. What is the website about and what are its intentions? Try to figure out the main content of the website, and explain it using simplified language that a 10-year-old would understand. DO NOT use existing text from the website, but explain it in your own words. Make sure not to leave out any information that might be pertinent to a reader.
-
-  "${content}"
-
-  Write a detailed summary of the above website, make sure the length of your summary is at most 200 words.
-  `
+    const prompt = `You are given the entire content of a website, but it doesn't have any formatting. The content includes extra text like "home," "login," and "contact." Your task is to understand the main content of the website and explain it in simple language. Imagine you're explaining it to a 10-year-old. Here's what you need to do:\n
+    - Focus on the main content and ignore extra sections like [16]Privacy - [17]Terms
+    - Figure out what the website is about and what it wants to do.
+    - Use your own words to explain the website's main content. Don't copy any text from the website.
+    - Make sure your explanation is easy for a 10-year-old to understand.
+    - Include all important information that a reader should know.
+    - Write a detailed summary that is no longer than 200 words.\n
+    The content of the website is provided below:\n
+      "\${content}"\n
+    Now, write your summary. A person reading your summary should instantly understand the purpose of the website.`;
+    
+    
 
     const payload: OpenAIStreamPayload = {
       model: "gpt-3.5-turbo",
