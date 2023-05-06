@@ -98,6 +98,9 @@ const Home: NextPage = () => {
       fullUrl = fullUrl.slice(0, -1);
     }
 
+    fullUrl = fullUrl.replace(/\/$/, "");
+    fullUrl = fullUrl.toLowerCase();
+
     console.log(fullUrl);
 
     if (!isValidURL(fullUrl)) {
