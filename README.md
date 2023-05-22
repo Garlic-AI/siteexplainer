@@ -26,4 +26,4 @@ Deploy the example using [Vercel](https://vercel.com?utm_source=github&utm_mediu
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/Nutlope/twitterbio&env=OPENAI_API_KEY&project-name=twitter-bio-generator&repo-name=twitterbio)
 
-## This version uses a pgsql database to cache results, so remove that code if you don't need it. I'd make it optional, but please submit a PR if you need that feature or if you would like to contribute. This site gets around 100 requests per day, so it's not a big deal.
+## This version uses a pgsql database to cache results, so remove that code if you don't need it. I'd make it optional, but please submit a PR if you need that feature or if you would like to contribute. This site gets around 400 requests per day, so it's not a big deal.
