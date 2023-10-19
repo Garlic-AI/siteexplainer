@@ -114,7 +114,7 @@ export async function OpenAIStream(payload: OpenAIStreamPayload, ipAddress: stri
   let counter = 0;
 
   // Define the rate limiting policy
-  const rateLimitPolicy = "1000;w=60;s=ip_address"; // 1000 requests per 60 seconds, segmented by IP address
+  const rateLimitPolicy = "10;w=60;s=ip_address"; // 1000 requests per 60 seconds, segmented by IP address
 
   const res = await fetch(`${HELICONE_BASE_URL}/chat/completions`, {
     headers: {
@@ -122,7 +122,7 @@ export async function OpenAIStream(payload: OpenAIStreamPayload, ipAddress: stri
       Authorization: `Bearer ${OPENAI_API_KEY ?? ""}`,
       "Helicone-Auth": `Bearer ${HELICONE_API_KEY}`,
       "Helicone-Property-IP": ipAddress, // Include the IP address in the request headers
-      // "Helicone-RateLimit-Policy": rateLimitPolicy, // Include the rate limiting policy in the request headers
+      "Helicone-RateLimit-Policy": rateLimitPolicy, // Include the rate limiting policy in the request headers
     },
     method: "POST",
     body: JSON.stringify(payload),
