@@ -114,7 +114,8 @@ export async function OpenAIStream(payload: OpenAIStreamPayload, ipAddress: stri
   let counter = 0;
 
   // Define the rate limiting policy
-  const rateLimitPolicy = "10;w=60;s=ip"; // 10 requests per 60 seconds, segmented by IP address
+  const rateLimitPolicy = "5;d=86400;s=ip"; // 5 requests per 86400 seconds (1 day), segmented by IP address
+
 
   const res = await fetch(`${HELICONE_BASE_URL}/chat/completions`, {
     headers: {
