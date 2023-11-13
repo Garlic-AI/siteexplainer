@@ -53,8 +53,8 @@ export async function OpenAIStream(
 
   let counter = 0;
 
-  // Define the rate limiting policy
-  const rateLimitPolicy = "5;d=86400;s=ip"; // 5 requests per 86400 seconds (1 day), segmented by IP address
+  // // Define the rate limiting policy
+  // const rateLimitPolicy = "5;d=86400;s=ip"; // 5 requests per 86400 seconds (1 day), segmented by IP address not used
 
   const identifier = "api";
   const result = await ratelimit.limit(identifier);
