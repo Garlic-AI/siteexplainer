@@ -19,7 +19,7 @@ import Faq from "../components/Faq";
 import { FcSearch } from "react-icons/fc";
 import Marquee from "react-fast-marquee";
 import FuturePedia from "../components/FuturePedia";
-import { useRouter } from 'next/router';
+import { useRouter } from "next/router";
 
 const Home: NextPage = () => {
   const [loading, setLoading] = useState(false);
@@ -37,22 +37,22 @@ const Home: NextPage = () => {
   useEffect(() => {
     if (randomizing) {
       setLoading(false);
-      return () => { };
+      return () => {};
     }
   }, [loading]);
 
   useEffect(() => {
     const searchQuery = router.query.search;
-  
+
     if (searchQuery) {
-      
       // If searchQuery is an array, take the first element, otherwise use it as is
-      const searchTerm = Array.isArray(searchQuery) ? searchQuery[0] : searchQuery;
+      const searchTerm = Array.isArray(searchQuery)
+        ? searchQuery[0]
+        : searchQuery;
       setUrl(searchTerm);
       generateSummary(searchTerm);
     }
   }, [router]);
-  
 
   function fetchLatestSites() {
     setLatestSites([]);
@@ -246,23 +246,32 @@ const Home: NextPage = () => {
     <div className="dark:bg-[#111a31] bg-gray-50">
       <div className="">
         <div className="w-full md:text-lg text-xs bg-[#7721c1] text-center hover:cursor-pointer font-semibold text-white h-12 items-center z-10 flex justify-center">
-          <div className="px-2"> {/* Add padding to the container */}
+          <div className="px-2">
+            {" "}
+            {/* Add padding to the container */}
             {/* Built by @michael_chomsky */}
             Built by{" "}
             <a
               href="https://twitter.com/michael_chomsky"
               target="_blank"
-              className="text-white hover:cursor-pointer underline md:text-lg text-xs"> {/* Adjust font size */}
+              className="text-white hover:cursor-pointer underline md:text-lg text-xs"
+            >
+              {" "}
+              {/* Adjust font size */}
               michael_chomsky
-            </a>
-            {" "}
+            </a>{" "}
             {/* Updated text and link */}
-            <span className="mx-1"> {/* Add margin to the text */}
+            <span className="mx-1">
+              {" "}
+              {/* Add margin to the text */}
               Looking for a similar tool for yourself or your business?
             </span>
             <a
               href="https://docs.google.com/forms/d/e/1FAIpQLSfUa3qfg05zRupFY07D2AAEmw3it_Pfs3uc6su4gtkuP2UE4g/viewform?usp=sf_link"
-              className="text-white hover:cursor-pointer underline md:text-lg text-xs"> {/* Adjust font size */}
+              className="text-white hover:cursor-pointer underline md:text-lg text-xs"
+            >
+              {" "}
+              {/* Adjust font size */}
               Reach out here and we'll build it
             </a>
           </div>
@@ -271,7 +280,7 @@ const Home: NextPage = () => {
       <div>
         <Toaster />
       </div>
-      <div className="flex max-w-5xl mx-auto flex-col items-center justify-center min-h-screen flex max-w-5xl mx-auto flex-col items-center justify-center py-2 min-h-screen" >
+      <div className="flex max-w-5xl mx-auto flex-col items-center justify-center min-h-screen flex max-w-5xl mx-auto flex-col items-center justify-center py-2 min-h-screen">
         <Head>
           <title>SiteExplainer</title>
           <link rel="icon" href="/favicon.ico" />
@@ -290,7 +299,8 @@ const Home: NextPage = () => {
                 aria-hidden="true"
                 viewBox="0 0 418 42"
                 className="absolute top-2/3 left-0 h-[0.58em] w-full fill-blue-300/70"
-                preserveAspectRatio="none">
+                preserveAspectRatio="none"
+              >
                 <path d="M203.371.916c-26.013-2.078-76.686 1.963-124.73 9.946L67.3 12.749C35.421 18.062 18.2 21.766 6.004 25.934 1.244 27.561.828 27.778.874 28.61c.07 1.214.828 1.121 9.595-1.176 9.072-2.377 17.15-3.92 39.246-7.496C123.565 7.986 157.869 4.492 195.942 5.046c7.461.108 19.25 1.696 19.17 2.582-.107 1.183-7.874 4.31-25.75 10.366-21.992 7.45-35.43 12.534-36.701 13.884-2.173 2.308-.202 4.407 4.generateS442 4.734 2.654.187 3.263.157 15.593-.78 35.401-2.686 57.944-3.488 88.365-3.143 46.327.526 75.721 2.23 130.788 7.584 19.787 1.924 20.814 1.98 24.557 1.332l.066-.011c1.201-.203 1.53-1.825.399-2.335-2.911-1.31-4.893-1.604-22.048-3.261-57.509-5.556-87.871-7.36-132.059-7.842-23.239-.254-33.617-.116-50.627.674-11.629.54-42.371 2.494-46.696 2.967-2.359.259 8.133-3.625 26.504-9.81 23.239-7.825 27.934-10.149 28.304-14.005.417-4.348-3.529-6-16.878-7.066Z" />
               </svg>
               <span className="relative">SiteExplainer</span>
@@ -300,7 +310,8 @@ const Home: NextPage = () => {
             href="https://github.com/MichaelAPCS/siteexplainer"
             className="flex max-w-fit items-center justify-center space-x-2 rounded-full border border-gray-700 bg-white px-4 py-2 text-sm text-gray-600 shadow-md transition-colors hover:bg-gray-100  mt-6"
             target="_blank"
-            rel="noopener noreferrer">
+            rel="noopener noreferrer"
+          >
             <Github />
             <p>Star on GitHub</p>
           </Link>
@@ -317,7 +328,8 @@ const Home: NextPage = () => {
               <div
                 className={
                   "dark:bg-gray-600 rounded-full p-1 mt-1 bg-gray-200 "
-                }>
+                }
+              >
                 <RiNumber1 className={""} />
               </div>
               <p className="text-left font-medium">
@@ -328,7 +340,7 @@ const Home: NextPage = () => {
                 {/* . */}
               </p>
             </div>
-            <div className="flex flex-row items-center px-4">
+            {/* <div className="flex flex-row items-center px-4">
               <input
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
@@ -360,25 +372,59 @@ const Home: NextPage = () => {
                   }}>
                   <span>Explain &rarr;</span>
                 </button>
+              )} */}
+            <div className="flex flex-row items-center px-4">
+              <input
+                value={url}
+                onChange={(e) => setUrl(e.target.value)}
+                className="w-full rounded-l-md border-gray-100 shadow-lg dark:bg-gray-200 bg-gray-100 focus:border-1 outline-none dark:text-black my-5 p-3"
+                placeholder={"thislandingpagemakesnosense.com"}
+              />
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  const newURL = url.trim();
+                  window.open(`https://smry.ai/${newURL}`, "_blank");
+                }}
+              >
+                <FcSearch className="text-5xl dark:bg-gray-200 bg-gray-100 p-2 rounded-r-md text-black" />
+              </button>
+            </div>
+            <div className="flex md:flex-row flex-col gap-4 md:gap-8 justify-center mt-4 px-4">
+              {!loading && (
+                <button
+                  className="bg-[#7721c1] md:w-1/3 w-full rounded-xl shadow-inner shadow-gray-400 duration-100 hover:bg-[#6813b2] hover:scale-105 py-3 text-lg font-semibold text-white text-center"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    const newURL = url.trim();
+                    window.open(`https://smry.ai/${newURL}`, "_blank");
+                  }}
+                >
+                  <span>Explain &rarr;</span>
+                </button>
               )}
+
               {loading && (
                 <button
                   className="bg-[#7721c1] rounded-xl md:w-1/3 w-full shadow-inner shadow-gray-400  duration-100 hover:bg-[#6813b2] text-lg font-semibold py-3"
-                  disabled>
+                  disabled
+                >
                   <LoadingDots color="white" style="large" />
                 </button>
               )}
               {!randomizing && (
                 <button
                   className="bg-[#c5c2c2] shadow-inner  duration-100 hover:bg-[#b3b0b0] shadow-gray-400 rounded-xl md:w-1/3 w-full text-lg font-semibold py-3 text-black text-center hover:scale-105"
-                  onClick={randomizeSite}>
+                  onClick={randomizeSite}
+                >
                   <span>Random site &rarr;</span>
                 </button>
               )}
               {randomizing && (
                 <button
                   className="bg-[#c5c2c2] rounded-xl md:w-1/3 w-full  duration-100 hover:bg-[#b3b0b0]  shadow-inner shadow-gray-400 text-md font-semibold py-3"
-                  disabled>
+                  disabled
+                >
                   <LoadingDots color="white" style="large" />
                 </button>
               )}
@@ -410,12 +456,32 @@ const Home: NextPage = () => {
                           toast("Summary copied to clipboard", {
                             icon: "✂️",
                           });
-                        }}>
+                        }}
+                      >
                         <p className={"dark:text-black"}>{generatedSummary}</p>
 
-                        <a href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(`I honestly had no idea what ${url} did until I used siteexplainer.com 🔥`)}`}
-                          target="_blank" className="text-[#1da1f2] font-medium text-sm px-5 py-2.5 text-center inline-flex items-center hover:opacity-80">
-                          <svg className="w-4 h-4 mr-2 -ml-1" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="twitter" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M459.4 151.7c.325 4.548 .325 9.097 .325 13.65 0 138.7-105.6 298.6-298.6 298.6-59.45 0-114.7-17.22-161.1-47.11 8.447 .974 16.57 1.299 25.34 1.299 49.06 0 94.21-16.57 130.3-44.83-46.13-.975-84.79-31.19-98.11-72.77 6.498 .974 12.99 1.624 19.82 1.624 9.421 0 18.84-1.3 27.61-3.573-48.08-9.747-84.14-51.98-84.14-102.1v-1.299c13.97 7.797 30.21 12.67 47.43 13.32-28.26-18.84-46.78-51.01-46.78-87.39 0-19.49 5.197-37.36 14.29-52.95 51.65 63.67 129.3 105.3 216.4 109.8-1.624-7.797-2.599-15.92-2.599-24.04 0-57.83 46.78-104.9 104.9-104.9 30.21 0 57.5 12.67 76.67 33.14 23.72-4.548 46.46-13.32 66.6-25.34-7.798 24.37-24.37 44.83-46.13 57.83 21.12-2.273 41.58-8.122 60.43-16.24-14.29 20.79-32.16 39.31-52.63 54.25z"></path></svg>
+                        <a
+                          href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
+                            `I honestly had no idea what ${url} did until I used siteexplainer.com 🔥`
+                          )}`}
+                          target="_blank"
+                          className="text-[#1da1f2] font-medium text-sm px-5 py-2.5 text-center inline-flex items-center hover:opacity-80"
+                        >
+                          <svg
+                            className="w-4 h-4 mr-2 -ml-1"
+                            aria-hidden="true"
+                            focusable="false"
+                            data-prefix="fab"
+                            data-icon="twitter"
+                            role="img"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 512 512"
+                          >
+                            <path
+                              fill="currentColor"
+                              d="M459.4 151.7c.325 4.548 .325 9.097 .325 13.65 0 138.7-105.6 298.6-298.6 298.6-59.45 0-114.7-17.22-161.1-47.11 8.447 .974 16.57 1.299 25.34 1.299 49.06 0 94.21-16.57 130.3-44.83-46.13-.975-84.79-31.19-98.11-72.77 6.498 .974 12.99 1.624 19.82 1.624 9.421 0 18.84-1.3 27.61-3.573-48.08-9.747-84.14-51.98-84.14-102.1v-1.299c13.97 7.797 30.21 12.67 47.43 13.32-28.26-18.84-46.78-51.01-46.78-87.39 0-19.49 5.197-37.36 14.29-52.95 51.65 63.67 129.3 105.3 216.4 109.8-1.624-7.797-2.599-15.92-2.599-24.04 0-57.83 46.78-104.9 104.9-104.9 30.21 0 57.5 12.67 76.67 33.14 23.72-4.548 46.46-13.32 66.6-25.34-7.798 24.37-24.37 44.83-46.13 57.83 21.12-2.273 41.58-8.122 60.43-16.24-14.29 20.79-32.16 39.31-52.63 54.25z"
+                            ></path>
+                          </svg>
                           Share on Twitter
                         </a>
                       </div>
@@ -440,18 +506,21 @@ const Home: NextPage = () => {
                               animate={{ opacity: 1 }}
                               exit={{ opacity: 0 }}
                               className="text-gray-600 ml-4"
-                              key={`latest-site-${index}`}>
+                              key={`latest-site-${index}`}
+                            >
                               <button
                                 onClick={() => handleLatestSiteClick(url)}
                                 className="w-full  md:px-3 px-1 md:py-4 py-3 border-[0.5px] font-semibold dark:border-gray-500 shadow-md  bg-gray-300 md:text-md text-sm dark:bg-[#1e293b] border-gray-100 rounded-xl flex flex-row text-black hover:bg-gray-200 dark:text-white
-                              ">
+                              "
+                              >
                                 <svg
                                   xmlns="http://www.w3.org/2000/svg"
                                   fill="none"
                                   viewBox="0 0 24 24"
                                   strokeWidth={1.5}
                                   stroke="currentColor"
-                                  className="w-6 h-6">
+                                  className="w-6 h-6"
+                                >
                                   <path
                                     strokeLinecap="round"
                                     strokeLinejoin="round"
@@ -476,7 +545,6 @@ const Home: NextPage = () => {
         <Faq />
         <Footer />
       </div>
-  
     </div>
   );
 };

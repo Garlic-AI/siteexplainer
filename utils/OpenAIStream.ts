@@ -14,7 +14,12 @@ const redis = new Redis({
 // Create a new ratelimiter, that allows 10 requests per day
 const ratelimit = new Ratelimit({
   redis: redis,
-  limiter: Ratelimit.fixedWindow(1, "86400 s"),
+  limiter: Ratelimit.fixedWindow(1, "120 s"),
+});
+
+const ratelimit2 = new Ratelimit({
+  redis: redis,
+  limiter: Ratelimit.fixedWindow(1, "120 s"),
 });
 
 export type ChatGPTAgent = "user" | "system";
@@ -58,10 +63,11 @@ export async function OpenAIStream(
 
   const identifier = ipAddress;
   const result = await ratelimit.limit(identifier);
+  const result2 = await ratelimit2.limit(identifier);
 
   console.log("result", result)
 
-  if (!result.success) {
+  if (!result.success || !result2.success) {
     return new ReadableStream({
       start(controller) {
         controller.enqueue(new TextEncoder().encode("You are out of requests. You get 10 requests per day. Please come back tomorrow for more requests, or if you need to run siteexplainer on custom data, reach out to us at contact@siteexplainer.com."));
@@ -85,43 +91,43 @@ export async function OpenAIStream(
     body: JSON.stringify(payload),
   });
 
-  // const stream = new ReadableStream({
-  //   async start(controller) {
-  //     // callback
-  //     function onParse(event: ParsedEvent | ReconnectInterval) {
-  //       if (event.type === "event") {
-  //         const data = event.data;
-  //         // https://beta.openai.com/docs/api-reference/completions/create#completions/create-stream
-  //         if (data === "[DONE]") {
-  //           controller.close();
-  //           return;
-  //         }
-  //         try {
-  //           const json = JSON.parse(data);
-  //           const text = json.choices[0].delta?.content || "";
-  //           if (counter < 2 && (text.match(/\n/) || []).length) {
-  //             // this is a prefix character (i.e., "\n\n"), do nothing
-  //             return;
-  //           }
-  //           const queue = encoder.encode(text);
-  //           controller.enqueue(queue);
-  //           counter++;
-  //         } catch (e) {
-  //           // maybe parse error
-  //           controller.error(e);
-  //         }
-  //       }
-  //     }
+  const stream = new ReadableStream({
+    async start(controller) {
+      // callback
+      function onParse(event: ParsedEvent | ReconnectInterval) {
+        if (event.type === "event") {
+          const data = event.data;
+          // https://beta.openai.com/docs/api-reference/completions/create#completions/create-stream
+          if (data === "[DONE]") {
+            controller.close();
+            return;
+          }
+          try {
+            const json = JSON.parse(data);
+            const text = json.choices[0].delta?.content || "";
+            if (counter < 2 && (text.match(/\n/) || []).length) {
+              // this is a prefix character (i.e., "\n\n"), do nothing
+              return;
+            }
+            const queue = encoder.encode(text);
+            controller.enqueue(queue);
+            counter++;
+          } catch (e) {
+            // maybe parse error
+            controller.error(e);
+          }
+        }
+      }
 
-  //     // stream response (SSE) from OpenAI may be fragmented into multiple chunks
-  //     // this ensures we properly read chunks and invoke an event for each SSE event stream
-  //     const parser = createParser(onParse);
-  //     // https://web.dev/streams/#asynchronous-iteration
-  //     for await (const chunk of res.body as any) {
-  //       parser.feed(decoder.decode(chunk));
-  //     }
-  //   },
-  // });
+      // stream response (SSE) from OpenAI may be fragmented into multiple chunks
+      // this ensures we properly read chunks and invoke an event for each SSE event stream
+      const parser = createParser(onParse);
+      // https://web.dev/streams/#asynchronous-iteration
+      for await (const chunk of res.body as any) {
+        parser.feed(decoder.decode(chunk));
+      }
+    },
+  });
 
-  // return stream;
+  return stream;
 }
