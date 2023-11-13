@@ -19,6 +19,7 @@ import Faq from "../components/Faq";
 import { FcSearch } from "react-icons/fc";
 import Marquee from "react-fast-marquee";
 import FuturePedia from "../components/FuturePedia";
+import { useRouter } from 'next/router';
 
 const Home: NextPage = () => {
   const [loading, setLoading] = useState(false);
@@ -26,6 +27,7 @@ const Home: NextPage = () => {
   const [url, setUrl] = useState("");
   const [generatedSummary, setGeneratedSummary] = useState<String>("");
   const [latestSites, setLatestSites] = useState<Array<any>>([]);
+  const router = useRouter();
   // console.log("Streamed response: ", generatedSummary);
   useEffect(() => {
     console.log("loaded");
@@ -38,6 +40,19 @@ const Home: NextPage = () => {
       return () => { };
     }
   }, [loading]);
+
+  useEffect(() => {
+    const searchQuery = router.query.search;
+  
+    if (searchQuery) {
+      
+      // If searchQuery is an array, take the first element, otherwise use it as is
+      const searchTerm = Array.isArray(searchQuery) ? searchQuery[0] : searchQuery;
+      setUrl(searchTerm);
+      generateSummary(searchTerm);
+    }
+  }, [router]);
+  
 
   function fetchLatestSites() {
     setLatestSites([]);
@@ -320,7 +335,16 @@ const Home: NextPage = () => {
                 className="w-full rounded-l-md border-gray-100  shadow-lg dark:bg-gray-200 bg-gray-100 focus:border-1 outline-none  dark:text-black my-5 p-3"
                 placeholder={"thislandingpagemakesnosense.com"}
               />
+              <button onClick={(e) => {
+                    e.preventDefault();
+                    const newURL = url.trim();
+                    router.push({
+                      pathname: router.pathname,
+                      query: { ...router.query, search: newURL }
+                    }, undefined, { shallow: true });
+                  }}>
               <FcSearch className="text-5xl dark:bg-gray-200 bg-gray-100 p-2 rounded-r-md text-black" />
+              </button>
             </div>
             <div className="flex md:flex-row flex-col gap-4  md:gap-8 justify-center mt-4 px-4">
               {!loading && (
@@ -328,7 +352,11 @@ const Home: NextPage = () => {
                   className="bg-[#7721c1] md:w-1/3 w-full rounded-xl shadow-inner shadow-gray-400  duration-100 hover:bg-[#6813b2] hover:scale-105 py-3 text-lg font-semibold text-white text-center"
                   onClick={(e) => {
                     e.preventDefault();
-                    generateSummary();
+                    const newURL = url.trim();
+                    router.push({
+                      pathname: router.pathname,
+                      query: { ...router.query, search: newURL }
+                    }, undefined, { shallow: true });
                   }}>
                   <span>Explain &rarr;</span>
                 </button>
