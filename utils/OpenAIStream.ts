@@ -14,7 +14,7 @@ const redis = new Redis({
 // Create a new ratelimiter, that allows 10 requests per day
 const ratelimit = new Ratelimit({
   redis: redis,
-  limiter: Ratelimit.fixedWindow(10, "86400 s"),
+  limiter: Ratelimit.fixedWindow(1, "86400 s"),
 });
 
 export type ChatGPTAgent = "user" | "system";
