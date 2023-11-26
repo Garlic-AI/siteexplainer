@@ -264,7 +264,7 @@ const Home: NextPage = () => {
             <span className="mx-1">
               {" "}
               {/* Add margin to the text */}
-              Looking for a similar tool for yourself or your business?
+              Have feedback?
             </span>
             <a
               href="https://docs.google.com/forms/d/e/1FAIpQLSfUa3qfg05zRupFY07D2AAEmw3it_Pfs3uc6su4gtkuP2UE4g/viewform?usp=sf_link"
@@ -272,7 +272,7 @@ const Home: NextPage = () => {
             >
               {" "}
               {/* Adjust font size */}
-              Reach out here and we'll build it
+              Reach out here to share your thoughts.
             </a>
           </div>
         </div>
