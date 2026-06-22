@@ -1,29 +1,54 @@
-# [SiteExplainer.com](https://www.siteexplainer.com/)
+# [SiteExplainer](https://www.siteexplainer.com/)
 
-This project generates Twitter bios for you using AI.
-
-[![Website Landing Page Explainer](./public/screenshot.png)](https://www.siteexplainer.com)
+Paste any confusing website and get a clear, jargon-free explanation of what it
+actually is and does. Every URL you explain becomes a permanent, server-rendered,
+cached page at **`siteexplainer.com/<url>`** (e.g.
+[`siteexplainer.com/vercel.com`](https://siteexplainer.com/vercel.com)).
 
 ## How it works
 
-This project uses the [OpenAI GPT-3 API](https://openai.com/api/) (specifically, text-davinci-003) and [Vercel Edge functions](https://vercel.com/features/edge-functions) with streaming. It constructs a prompt based on the form and user input, sends it to the GPT-3 API via a Vercel Edge function, then streams the response back to the application.
+1. You paste a URL (or go straight to `siteexplainer.com/<url>`).
+2. We fetch the page's own HTML and distill it down to the meaningful text.
+3. We send that to [OpenRouter](https://openrouter.ai) using the cheap
+   `openrouter/auto` model to write a short, plain-English explanation.
+4. The result is cached in Redis forever and rendered server-side, so the page
+   loads instantly and is fully indexable.
 
-Video and blog post coming soon on how to build apps with OpenAI and Vercel Edge functions!
+## Stack
 
-## Running Locally
+- **Next.js 16** (App Router, React 19, server components + streaming)
+- **Tailwind CSS v4**
+- **Upstash Redis** — caches explanations, the "recently explained" list, and
+  powers per-IP **and** global daily rate limits (the wallet guard)
+- **OpenRouter** (`openrouter/auto`) for generation
+- Deployed on **Vercel**
 
-After cloning the repo, go to [OpenAI](https://beta.openai.com/account/api-keys) to make an account and put your API key in a file called `.env`.
+## Running locally
 
-Then, run the application in the command line and it will be available at `http://localhost:3000`.
+Copy `.env.example` to `.env` and fill in the keys:
 
 ```bash
+cp .env.example .env
+```
+
+- `OPENROUTER_API_KEY` — from https://openrouter.ai/keys
+- `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` — create a free DB at
+  https://console.upstash.com
+- `RATE_LIMIT_PER_IP_PER_DAY` / `RATE_LIMIT_GLOBAL_PER_DAY` — optional tuning
+- `NEXT_PUBLIC_SITE_URL` — your public origin (used for canonical/OG + sitemap)
+
+Then:
+
+```bash
+npm install
 npm run dev
 ```
 
-## One-Click Deploy
+The app runs at `http://localhost:3000`. Without Redis credentials it still
+works — it just won't cache or rate-limit.
 
-Deploy the example using [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=vercel-examples):
+## Notes
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/Nutlope/twitterbio&env=OPENAI_API_KEY&project-name=twitter-bio-generator&repo-name=twitterbio)
-
-## This version uses a pgsql database to cache results, so remove that code if you don't need it. I'd make it optional, but please submit a PR if you need that feature or if you would like to contribute. This site gets around 400 requests per day, so it's not a big deal.
+The app degrades gracefully: if Redis is unavailable, explanations are still
+generated (no caching, rate-limit checks fail open). Only **new** generations
+count against the rate limits — cached pages are always free and unlimited.
