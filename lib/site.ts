@@ -2,8 +2,11 @@
 
 export const SITE_NAME = "SiteExplainer";
 
+// Use the canonical serving host (www). The apex 308-redirects here, and social
+// crawlers (notably X/Twitter) won't follow a redirect for og:image — so canonical
+// and image URLs must be direct, non-redirecting www URLs.
 export const SITE_URL = (
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://siteexplainer.com"
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.siteexplainer.com"
 ).replace(/\/+$/, "");
 
 export const SITE_TAGLINE =
