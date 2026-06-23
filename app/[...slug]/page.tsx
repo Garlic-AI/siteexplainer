@@ -8,20 +8,17 @@ import { SITE_NAME, SITE_URL } from "@/lib/site";
 import { SiteHeader } from "../_components/site-header";
 import { Footer } from "../_components/footer";
 import { UrlForm } from "../_components/url-form";
+import { LoadingCard } from "../_components/loading-card";
 import { Explanation } from "./explanation";
 
 type RouteParams = { params: Promise<{ slug: string[] }> };
 
-// On-demand ISR: nothing is prebuilt, but the first visit to /<url> renders the
-// page once and caches it as STATIC HTML served from the CDN. The generation itself
-// is cached forever (unstable_cache), so the hourly background revalidate just
-// re-renders from cached data — no repeat fetch or LLM call. This is what makes
-// /vercel.com a static page after the first hit instead of re-rendering every time.
-export const dynamicParams = true;
-export const revalidate = 3600;
-export function generateStaticParams() {
-  return [];
-}
+// Stream the shell, never block on it. The page renders the header, title and a
+// loading card immediately (it needs no data, so first-byte is instant); only the
+// <Explanation> inside its Suspense boundary waits on the fetch + (cached) LLM call
+// and streams in when ready. So a brand-new /<url> paints right away instead of
+// hanging on a blank screen, and repeat visits stream the cached result instantly.
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: RouteParams): Promise<Metadata> {
   const { slug } = await params;
@@ -80,7 +77,7 @@ export default async function SitePage({ params }: RouteParams) {
             </h1>
 
             <div className="mt-8">
-              <Suspense fallback={<ExplanationSkeleton />}>
+              <Suspense fallback={<LoadingCard host={target.host} />}>
                 <Explanation target={target} />
               </Suspense>
             </div>
@@ -94,20 +91,6 @@ export default async function SitePage({ params }: RouteParams) {
       </main>
 
       <Footer />
-    </div>
-  );
-}
-
-function ExplanationSkeleton() {
-  return (
-    <div className="raised rounded-xl p-6 sm:p-8">
-      <div className="mb-5 h-4 w-32 animate-pulse rounded bg-surface-2" />
-      <div className="space-y-3">
-        <div className="h-4 w-full animate-pulse rounded bg-surface-2" />
-        <div className="h-4 w-[92%] animate-pulse rounded bg-surface-2" />
-        <div className="h-4 w-[78%] animate-pulse rounded bg-surface-2" />
-      </div>
-      <p className="mt-6 text-sm text-faint">Reading the site and writing a plain-English explanation…</p>
     </div>
   );
 }
