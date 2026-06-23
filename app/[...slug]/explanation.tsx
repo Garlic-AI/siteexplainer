@@ -1,7 +1,5 @@
 import Link from "next/link";
 import { getOrCreateExplanation } from "@/lib/summary";
-import { getClientIp } from "@/lib/request";
-import { limits } from "@/lib/ratelimit";
 import type { NormalizedTarget } from "@/lib/url";
 import { ShareRow } from "../_components/share-button";
 import { ExternalIcon, SparklesIcon } from "../_components/icons";
@@ -11,22 +9,11 @@ import { ExternalIcon, SparklesIcon } from "../_components/icons";
  * boundary so the page shell streams instantly while this awaits fetch + generation.
  */
 export async function Explanation({ target }: { target: NormalizedTarget }) {
-  const ip = await getClientIp();
-  const result = await getOrCreateExplanation(target, ip);
-
-  if (result.status === "rate_limited") {
-    return (
-      <Notice tone="warn" title="Daily limit reached">
-        {result.scope === "global"
-          ? `SiteExplainer has hit its limit of new explanations for today (${limits.globalPerDay}). Already-explained sites still work — please check back tomorrow for new ones.`
-          : `You've used your ${limits.perIpPerDay} new explanations for today. Already-explained sites still work — please come back tomorrow.`}
-      </Notice>
-    );
-  }
+  const result = await getOrCreateExplanation(target);
 
   if (result.status === "fetch_error") {
     return (
-      <Notice tone="error" title="Couldn't read that site">
+      <Notice title="Couldn't read that site">
         {result.message} Double-check the address, or try a different site.
       </Notice>
     );
@@ -34,7 +21,7 @@ export async function Explanation({ target }: { target: NormalizedTarget }) {
 
   if (result.status === "error") {
     return (
-      <Notice tone="error" title="Something went wrong">
+      <Notice title="Something went wrong">
         {result.message} Please try again in a moment.
       </Notice>
     );
@@ -74,20 +61,10 @@ export async function Explanation({ target }: { target: NormalizedTarget }) {
   );
 }
 
-function Notice({
-  tone,
-  title,
-  children,
-}: {
-  tone: "warn" | "error";
-  title: string;
-  children: React.ReactNode;
-}) {
-  const ring = tone === "warn" ? "border-amber-500/40" : "border-rose-500/40";
-  const dot = tone === "warn" ? "text-amber-400" : "text-rose-400";
+function Notice({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className={`animate-fade-up rounded-2xl border ${ring} bg-surface p-6 sm:p-8`}>
-      <h2 className={`flex items-center gap-2 font-medium ${dot}`}>
+    <div className="animate-fade-up rounded-2xl border border-rose-500/40 bg-surface p-6 sm:p-8">
+      <h2 className="flex items-center gap-2 font-medium text-rose-400">
         <span aria-hidden>●</span>
         {title}
       </h2>

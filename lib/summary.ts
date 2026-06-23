@@ -1,15 +1,16 @@
 import { cache } from "react";
 import { getRedis } from "./redis";
-import { consumeGenerationQuota } from "./ratelimit";
 import { fetchSiteContent, SiteFetchError } from "./fetch-site";
 import { generateExplanation } from "./openrouter";
 import type { NormalizedTarget } from "./url";
 
 /**
  * The orchestration layer. `getOrCreateExplanation` is the single entry point used
- * by the permanent `/[...slug]` pages:  cache hit -> serve;  miss -> rate-limit ->
- * fetch -> generate -> persist forever.  Reads are deduped per request via React
- * `cache()` so `generateMetadata` and the page body share one Redis round-trip.
+ * by the permanent `/[...slug]` pages:  cache hit -> serve;  miss -> fetch ->
+ * generate -> persist forever.  Generation uses OpenRouter's free models, so there's
+ * no per-request cost and no app-level rate limiting — OpenRouter's free-tier limits
+ * are the backstop. Reads are deduped per request via React `cache()` so
+ * `generateMetadata` and the page body share one Redis round-trip.
  */
 
 const PAGE_PREFIX = "se:page:";
@@ -27,7 +28,6 @@ export type StoredPage = {
 
 export type ExplanationResult =
   | { status: "ok"; page: StoredPage; cached: boolean }
-  | { status: "rate_limited"; scope: "ip" | "global" }
   | { status: "fetch_error"; message: string }
   | { status: "error"; message: string };
 
@@ -44,20 +44,15 @@ export const getStoredPage = cache(async (slug: string): Promise<StoredPage | nu
 });
 
 /**
- * Get the cached explanation for a target, or create it (counting a cache miss
- * against the rate limits). The cheap dedup that matters — sharing one Redis read
- * with `generateMetadata` — lives in `getStoredPage`'s `cache()`, which this calls.
+ * Get the cached explanation for a target, or create it. The cheap dedup that
+ * matters — sharing one Redis read with `generateMetadata` — lives in
+ * `getStoredPage`'s `cache()`, which this calls.
  */
 export async function getOrCreateExplanation(
   target: NormalizedTarget,
-  ip: string,
 ): Promise<ExplanationResult> {
   const existing = await getStoredPage(target.slug);
   if (existing) return { status: "ok", page: existing, cached: true };
-
-  // Cache miss -> this will cost money, so it must pass the rate limits.
-  const decision = await consumeGenerationQuota(ip);
-  if (!decision.ok) return { status: "rate_limited", scope: decision.scope };
 
   let content;
   try {
