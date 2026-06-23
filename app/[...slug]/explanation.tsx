@@ -27,11 +27,11 @@ export async function Explanation({ target }: { target: NormalizedTarget }) {
     );
   }
 
-  const { page, cached } = result;
+  const { page } = result;
 
   return (
-    <div className="animate-fade-up">
-      <div className="rounded-2xl border border-border bg-surface p-6 sm:p-8">
+    <div>
+      <div className="rounded-xl border border-border bg-surface p-6 sm:p-8">
         <div className="mb-4 flex items-center gap-2 text-sm text-accent">
           <SparklesIcon width={16} height={16} />
           <span className="font-medium">In plain English</span>
@@ -39,7 +39,7 @@ export async function Explanation({ target }: { target: NormalizedTarget }) {
         <p className="text-pretty text-lg leading-relaxed text-ink">
           {page.summary}
         </p>
-        <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-border/70 pt-5">
+        <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-5">
           <ShareRow host={target.host} slug={target.slug} />
           <a
             href={page.url}
@@ -54,8 +54,8 @@ export async function Explanation({ target }: { target: NormalizedTarget }) {
       </div>
 
       <p className="mt-3 px-1 text-xs text-faint">
-        {cached ? "Served from cache" : "Freshly explained"} · grounded in the site's own
-        content. <Link href="/" className="underline hover:text-muted">Explain another site →</Link>
+        Grounded in the site's own content.{" "}
+        <Link href="/" className="underline hover:text-muted">Explain another site →</Link>
       </p>
     </div>
   );
@@ -63,7 +63,7 @@ export async function Explanation({ target }: { target: NormalizedTarget }) {
 
 function Notice({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="animate-fade-up rounded-2xl border border-rose-500/40 bg-surface p-6 sm:p-8">
+    <div className="rounded-xl border border-rose-500/40 bg-surface p-6 sm:p-8">
       <h2 className="flex items-center gap-2 font-medium text-rose-400">
         <span aria-hidden>●</span>
         {title}

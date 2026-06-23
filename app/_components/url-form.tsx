@@ -45,7 +45,7 @@ export function UrlForm({ size = "hero" }: Props) {
       className="w-full"
     >
       <div
-        className={`flex items-center gap-2 rounded-2xl border border-border bg-surface p-2 shadow-xl shadow-black/40 transition-colors focus-within:border-accent/70 ${
+        className={`flex items-center gap-2 rounded-xl border border-border bg-surface p-2 transition-colors focus-within:border-accent ${
           hero ? "sm:p-2.5" : ""
         }`}
       >
@@ -70,7 +70,7 @@ export function UrlForm({ size = "hero" }: Props) {
         <button
           type="submit"
           disabled={pending}
-          className={`inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-gradient-to-br from-accent to-accent-2 font-medium text-white shadow-sm transition hover:brightness-110 disabled:opacity-70 ${
+          className={`inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-accent font-medium text-white transition-colors hover:bg-accent-strong disabled:opacity-60 ${
             hero ? "px-4 py-2.5 text-sm sm:text-base" : "px-3 py-2 text-sm"
           }`}
         >

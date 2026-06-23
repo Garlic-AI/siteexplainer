@@ -35,35 +35,31 @@ export default function HomePage() {
 
       <main className="flex-1">
         {/* Hero */}
-        <section className="relative overflow-hidden">
-          <div className="aurora pointer-events-none absolute inset-x-0 top-0 h-[420px]" />
-          <div className="relative mx-auto flex max-w-3xl flex-col items-center px-4 pb-16 pt-16 text-center sm:px-6 sm:pt-24">
-            <span className="animate-fade-in mb-6 inline-flex items-center gap-2 rounded-full border border-border bg-surface px-3 py-1 text-xs text-muted">
-              <SparklesIcon width={14} height={14} className="text-accent" />
+        <section>
+          <div className="mx-auto flex max-w-3xl flex-col items-center px-4 pb-16 pt-16 text-center sm:px-6 sm:pt-24">
+            <span className="mb-6 inline-flex items-center gap-2 rounded-full border border-border bg-surface px-3 py-1 text-xs text-muted">
+              <SparklesIcon width={14} height={14} className="text-muted" />
               AI website explainer
             </span>
 
-            <h1 className="animate-fade-up text-balance text-4xl font-semibold tracking-tight sm:text-6xl">
-              Understand any website{" "}
-              <span className="bg-gradient-to-r from-accent to-accent-2 bg-clip-text text-transparent">
-                in seconds
-              </span>
+            <h1 className="text-balance text-4xl font-semibold sm:text-6xl">
+              Understand any website in seconds
             </h1>
 
-            <p className="animate-fade-up mt-5 max-w-xl text-pretty text-lg text-muted">
+            <p className="mt-5 max-w-xl text-pretty text-lg text-muted">
               Paste a confusing landing page and get a clear, jargon-free explanation of
               what it actually is and does.
             </p>
 
-            <div className="animate-fade-up mt-9 w-full max-w-xl">
+            <div className="mt-9 w-full max-w-xl">
               <UrlForm size="hero" />
             </div>
 
             {/* The key behavior users should learn. */}
-            <p className="animate-fade-in mt-6 text-sm text-faint">
+            <p className="mt-6 text-sm text-faint">
               Pro tip: open{" "}
               <span className="rounded-md bg-surface-2 px-1.5 py-0.5 font-mono text-ink">
-                siteexplainer.com/<span className="text-accent">vercel.com</span>
+                siteexplainer.com/<span className="text-muted">vercel.com</span>
               </span>{" "}
               and any URL explains itself.
             </p>
@@ -78,9 +74,9 @@ export default function HomePage() {
         </section>
 
         {/* How it works */}
-        <section id="how" className="scroll-mt-20 border-t border-border/60 bg-surface/30">
+        <section id="how" className="scroll-mt-20 border-t border-border">
           <div className="mx-auto max-w-5xl px-4 py-20 sm:px-6">
-            <h2 className="text-center text-2xl font-semibold tracking-tight sm:text-3xl">
+            <h2 className="text-center text-2xl font-semibold sm:text-3xl">
               How it works
             </h2>
             <p className="mx-auto mt-3 max-w-xl text-center text-muted">
@@ -91,10 +87,10 @@ export default function HomePage() {
               {STEPS.map((step, i) => (
                 <li
                   key={step.title}
-                  className="rounded-2xl border border-border bg-surface p-6"
+                  className="rounded-xl border border-border bg-surface p-6"
                 >
                   <div className="flex items-center gap-3">
-                    <span className="grid size-9 place-items-center rounded-xl bg-gradient-to-br from-accent to-accent-2 text-white">
+                    <span className="grid size-9 place-items-center rounded-lg border border-border bg-surface-2 text-ink">
                       <step.icon width={18} height={18} />
                     </span>
                     <span className="font-mono text-sm text-faint">

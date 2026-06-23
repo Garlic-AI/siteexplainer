@@ -10,7 +10,7 @@ export default function NotFound() {
       <main className="flex flex-1 items-center justify-center px-4">
         <div className="w-full max-w-xl py-20 text-center">
           <p className="font-mono text-sm text-faint">404</p>
-          <h1 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">
+          <h1 className="mt-2 text-3xl font-semibold sm:text-4xl">
             That's not a website we can explain
           </h1>
           <p className="mt-3 text-muted">

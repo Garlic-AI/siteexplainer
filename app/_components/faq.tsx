@@ -28,10 +28,10 @@ const FAQ_ITEMS = [
 export function Faq() {
   return (
     <section id="faq" className="mx-auto w-full max-w-3xl scroll-mt-20">
-      <h2 className="text-center text-2xl font-semibold tracking-tight sm:text-3xl">
+      <h2 className="text-center text-2xl font-semibold sm:text-3xl">
         Frequently asked questions
       </h2>
-      <div className="mt-8 divide-y divide-border/70 overflow-hidden rounded-2xl border border-border bg-surface">
+      <div className="mt-8 divide-y divide-border/70 overflow-hidden rounded-xl border border-border bg-surface">
         {FAQ_ITEMS.map((item) => (
           <details key={item.q} className="group px-5 [&_summary::-webkit-details-marker]:hidden">
             <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-4 font-medium">

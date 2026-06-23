@@ -55,21 +55,16 @@ export default async function SitePage({ params }: RouteParams) {
       <SiteHeader />
 
       <main className="flex-1">
-        <div className="relative overflow-hidden">
-          <div className="aurora pointer-events-none absolute inset-x-0 top-0 h-64" />
-          <div className="relative mx-auto max-w-2xl px-4 py-12 sm:px-6 sm:py-16">
+        <div>
+          <div className="mx-auto max-w-2xl px-4 py-12 sm:px-6 sm:py-16">
             <p className="text-sm text-faint">
               <Link href="/" className="transition-colors hover:text-muted">
                 SiteExplainer
               </Link>{" "}
               / explanation
             </p>
-            <h1 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">
-              What is{" "}
-              <span className="bg-gradient-to-r from-accent to-accent-2 bg-clip-text text-transparent">
-                {target.host}
-              </span>
-              ?
+            <h1 className="mt-2 text-3xl font-semibold sm:text-4xl">
+              What is <span className="text-accent">{target.host}</span>?
             </h1>
 
             <div className="mt-8">
@@ -78,7 +73,7 @@ export default async function SitePage({ params }: RouteParams) {
               </Suspense>
             </div>
 
-            <div className="mt-12 border-t border-border/60 pt-8">
+            <div className="mt-12 border-t border-border pt-8">
               <p className="mb-3 text-sm text-muted">Explain another site</p>
               <UrlForm size="compact" />
             </div>
@@ -93,7 +88,7 @@ export default async function SitePage({ params }: RouteParams) {
 
 function ExplanationSkeleton() {
   return (
-    <div className="rounded-2xl border border-border bg-surface p-6 sm:p-8">
+    <div className="rounded-xl border border-border bg-surface p-6 sm:p-8">
       <div className="mb-5 h-4 w-32 animate-pulse rounded bg-surface-2" />
       <div className="space-y-3">
         <div className="h-4 w-full animate-pulse rounded bg-surface-2" />

@@ -4,10 +4,10 @@ import { GitHubIcon, SparklesIcon } from "./icons";
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-30 border-b border-border/60 bg-bg/70 backdrop-blur-md">
+    <header className="sticky top-0 z-30 border-b border-border bg-bg/90 backdrop-blur">
       <div className="mx-auto flex h-14 max-w-5xl items-center justify-between px-4 sm:px-6">
-        <Link href="/" className="group flex items-center gap-2 font-semibold tracking-tight">
-          <span className="grid size-7 place-items-center rounded-lg bg-gradient-to-br from-accent to-accent-2 text-white shadow-sm">
+        <Link href="/" className="group flex items-center gap-2 font-semibold">
+          <span className="grid size-7 place-items-center rounded-md bg-accent text-white">
             <SparklesIcon width={16} height={16} />
           </span>
           <span>
