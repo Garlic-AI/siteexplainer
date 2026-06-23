@@ -12,6 +12,17 @@ import { Explanation } from "./explanation";
 
 type RouteParams = { params: Promise<{ slug: string[] }> };
 
+// On-demand ISR: nothing is prebuilt, but the first visit to /<url> renders the
+// page once and caches it as STATIC HTML served from the CDN. The generation itself
+// is cached forever (unstable_cache), so the hourly background revalidate just
+// re-renders from cached data — no repeat fetch or LLM call. This is what makes
+// /vercel.com a static page after the first hit instead of re-rendering every time.
+export const dynamicParams = true;
+export const revalidate = 3600;
+export function generateStaticParams() {
+  return [];
+}
+
 export async function generateMetadata({ params }: RouteParams): Promise<Metadata> {
   const { slug } = await params;
   const target = targetFromSlug(slug);
@@ -24,6 +35,7 @@ export async function generateMetadata({ params }: RouteParams): Promise<Metadat
   const description = stored?.summary
     ? stored.summary.slice(0, 200)
     : `A plain-English explanation of what ${target.host} is and does, by ${SITE_NAME}.`;
+  const ogImage = `/og?slug=${encodeURIComponent(target.slug)}`;
 
   return {
     title,
@@ -34,13 +46,13 @@ export async function generateMetadata({ params }: RouteParams): Promise<Metadat
       title: `What is ${target.host}? · ${SITE_NAME}`,
       description,
       url: canonical,
-      images: ["/og-image.png"],
+      images: [{ url: ogImage, width: 1200, height: 630, alt: title }],
     },
     twitter: {
       card: "summary_large_image",
       title: `What is ${target.host}?`,
       description,
-      images: ["/og-image.png"],
+      images: [ogImage],
     },
   };
 }
