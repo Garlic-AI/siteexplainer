@@ -1,16 +1,35 @@
 @import "tailwindcss";
 
+/*
+ * Color system, OKLCH.
+ *
+ * Perceptually uniform: equal lightness => equal perceived brightness across hues,
+ * so a white label clears WCAG on every intent at once (verified: white on the
+ * accent fill is 4.79:1). Surfaces are near-true-neutral with only a whisper of
+ * warmth (tiny chroma at hue ~85), and zero tint below L0.16 so the darks never
+ * read yellow. Elevation is carried by lightness: closer to you = lighter.
+ */
 @theme {
-  /* Neutral, near-monochrome surface scale (zinc-ish) with a single blue accent. */
-  --color-bg: #0a0a0a;
-  --color-surface: #151515;
-  --color-surface-2: #1f1f1f;
-  --color-border: #2a2a2a;
-  --color-ink: #fafafa;
-  --color-muted: #a1a1aa;
-  --color-faint: #71717a;
-  --color-accent: #3b82f6;
-  --color-accent-strong: #2563eb;
+  /* Surfaces — ascending lightness = rising elevation. */
+  --color-bg: oklch(0.16 0 0);
+  --color-surface: oklch(0.205 0.004 85);
+  --color-surface-2: oklch(0.255 0.005 85);
+  --color-border: oklch(0.33 0.006 85);
+
+  /* Foregrounds. */
+  --color-ink: oklch(0.97 0.003 85);
+  --color-muted: oklch(0.72 0.006 85);
+  --color-faint: oklch(0.55 0.006 85);
+
+  /* Accent (blue). `accent` reads as text/icons on dark; `accent-fill` is the
+     button surface that carries a white label; `accent-ring` is derived from it. */
+  --color-accent: oklch(0.72 0.13 248);
+  --color-accent-fill: oklch(0.55 0.16 248);
+  --color-accent-fill-strong: oklch(0.5 0.17 248);
+  --color-accent-ring: oklch(0.43 0.14 248);
+
+  /* Destructive intent — same lightness discipline as the accent. */
+  --color-danger: oklch(0.7 0.16 22);
 
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, -apple-system,
     "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -23,6 +42,14 @@
     color-scheme: dark;
   }
 
+  /* Continuous (squircle) corners everywhere a radius is set — the iOS/Figma curve.
+     Progressive enhancement: browsers without `corner-shape` just render the radius. */
+  *,
+  *::before,
+  *::after {
+    corner-shape: squircle;
+  }
+
   body {
     background-color: var(--color-bg);
     color: var(--color-ink);
@@ -32,6 +59,60 @@
   }
 
   ::selection {
-    background: color-mix(in oklab, var(--color-accent) 30%, transparent);
+    background: oklch(0.55 0.16 248 / 0.3);
+  }
+}
+
+@layer components {
+  /*
+   * A raised surface. Instead of a flat 1px border we stack box-shadows: a top
+   * inset highlight (light catching the near edge), a hairline ring, and a soft
+   * drop. Composites with no layout shift, and deepens naturally with elevation.
+   */
+  .raised {
+    background-color: var(--color-surface);
+    box-shadow:
+      inset 0 1px 0 0 oklch(1 0 0 / 0.04),
+      0 0 0 1px var(--color-border),
+      0 1px 3px 0 oklch(0 0 0 / 0.25);
+  }
+
+  /*
+   * Primary button. Inset highlight + a ring derived from the intent itself, over
+   * the accent fill. Hover deepens the fill (staying above 4.5:1); press collapses
+   * the highlight to an inset shadow so the button visibly sinks.
+   */
+  .btn-accent {
+    background-color: var(--color-accent-fill);
+    color: #fff;
+    box-shadow:
+      inset 0 1px 0 0 oklch(1 0 0 / 0.22),
+      0 0 0 1px var(--color-accent-ring),
+      0 1px 2px 0 oklch(0 0 0 / 0.3);
+    transition:
+      background-color 120ms ease,
+      box-shadow 120ms ease,
+      transform 90ms ease;
+  }
+
+  .btn-accent:hover:not(:disabled) {
+    background-color: var(--color-accent-fill-strong);
+  }
+
+  .btn-accent:active:not(:disabled) {
+    transform: translateY(1px);
+    box-shadow:
+      inset 0 1px 2px 0 oklch(0 0 0 / 0.35),
+      0 0 0 1px var(--color-accent-ring);
+  }
+
+  .btn-accent:disabled {
+    opacity: 0.6;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .btn-accent {
+      transition: none;
+    }
   }
 }

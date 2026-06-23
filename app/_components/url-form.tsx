@@ -70,7 +70,7 @@ export function UrlForm({ size = "hero" }: Props) {
         <button
           type="submit"
           disabled={pending}
-          className={`inline-flex shrink-0 items-center gap-1.5 rounded-lg bg-accent font-medium text-white transition-colors hover:bg-accent-strong disabled:opacity-60 ${
+          className={`btn-accent inline-flex shrink-0 items-center gap-1.5 rounded-lg font-medium ${
             hero ? "px-4 py-2.5 text-sm sm:text-base" : "px-3 py-2 text-sm"
           }`}
         >
@@ -81,7 +81,7 @@ export function UrlForm({ size = "hero" }: Props) {
 
       <div className="mt-3 flex min-h-5 items-center justify-between gap-3 px-1">
         <p
-          className={`text-sm ${error ? "text-rose-400" : "text-faint"}`}
+          className={`text-sm ${error ? "text-danger" : "text-faint"}`}
           role={error ? "alert" : undefined}
         >
           {error ?? "We fetch the page, then explain it in plain English."}

@@ -88,7 +88,7 @@ export default async function SitePage({ params }: RouteParams) {
 
 function ExplanationSkeleton() {
   return (
-    <div className="rounded-xl border border-border bg-surface p-6 sm:p-8">
+    <div className="raised rounded-xl p-6 sm:p-8">
       <div className="mb-5 h-4 w-32 animate-pulse rounded bg-surface-2" />
       <div className="space-y-3">
         <div className="h-4 w-full animate-pulse rounded bg-surface-2" />

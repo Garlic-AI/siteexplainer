@@ -31,7 +31,7 @@ export async function Explanation({ target }: { target: NormalizedTarget }) {
 
   return (
     <div>
-      <div className="rounded-xl border border-border bg-surface p-6 sm:p-8">
+      <div className="raised rounded-xl p-6 sm:p-8">
         <div className="mb-4 flex items-center gap-2 text-sm text-accent">
           <SparklesIcon width={16} height={16} />
           <span className="font-medium">In plain English</span>
@@ -63,8 +63,8 @@ export async function Explanation({ target }: { target: NormalizedTarget }) {
 
 function Notice({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="rounded-xl border border-rose-500/40 bg-surface p-6 sm:p-8">
-      <h2 className="flex items-center gap-2 font-medium text-rose-400">
+    <div className="raised rounded-xl p-6 sm:p-8">
+      <h2 className="flex items-center gap-2 font-medium text-danger">
         <span aria-hidden>●</span>
         {title}
       </h2>

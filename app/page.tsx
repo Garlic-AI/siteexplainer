@@ -87,10 +87,10 @@ export default function HomePage() {
               {STEPS.map((step, i) => (
                 <li
                   key={step.title}
-                  className="rounded-xl border border-border bg-surface p-6"
+                  className="raised rounded-xl p-6"
                 >
                   <div className="flex items-center gap-3">
-                    <span className="grid size-9 place-items-center rounded-lg border border-border bg-surface-2 text-ink">
+                    <span className="grid size-9 place-items-center rounded-lg bg-surface-2 text-ink shadow-[inset_0_1px_0_0_oklch(1_0_0/0.05),0_0_0_1px_var(--color-border)]">
                       <step.icon width={18} height={18} />
                     </span>
                     <span className="font-mono text-sm text-faint">
