@@ -17,8 +17,7 @@ import type { NormalizedTarget } from "./url";
  *      then served from cache. Errors are thrown (never cached) so transient failures
  *      retry on the next visit.
  *
- * Generation runs on OpenRouter's free models, so there's no per-request cost and no
- * app-level rate limiting. Reads are deduped per request via React `cache()` so
+ * Reads are deduped per request via React `cache()` so
  * `generateMetadata` and the page body share one round-trip.
  */
 
@@ -28,7 +27,7 @@ const LATEST_LIST = "se:latest"; // recent slugs, for the home page list
 const LATEST_MAX = 40;
 
 // Bump to invalidate every Data-Cache explanation (e.g. after a prompt change).
-const CACHE_VERSION = "v1";
+const CACHE_VERSION = "v2";
 
 export type StoredPage = {
   url: string;
