@@ -23,7 +23,7 @@ const STEPS = [
   },
   {
     title: "Get a plain-English explainer",
-    body: "A short, jargon-free summary of what the site is and does — saved to a permanent page.",
+    body: "A clear breakdown of what the site does, why it helps, and how someone might use it — saved to a permanent page.",
     icon: ArrowRightIcon,
   },
 ];

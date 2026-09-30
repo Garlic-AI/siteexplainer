@@ -29,8 +29,8 @@ export async function generateMetadata({ params }: RouteParams): Promise<Metadat
   const stored = await getStoredPage(target.slug);
   const canonical = `${SITE_URL}/${target.slug}`;
   const title = `What is ${target.host}?`;
-  const description = stored?.summary
-    ? stored.summary.slice(0, 200)
+  const description = stored?.explanation.overview
+    ? stored.explanation.overview.slice(0, 200)
     : `A plain-English explanation of what ${target.host} is and does, by ${SITE_NAME}.`;
   const ogImage = `/og?slug=${encodeURIComponent(target.slug)}`;
 

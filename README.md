@@ -10,8 +10,8 @@ cached page at **`siteexplainer.com/<url>`** (e.g.
 1. You paste a URL (or go straight to `siteexplainer.com/<url>`).
 2. We fetch the page's own HTML and distill it down to the meaningful text.
 3. We send that to [OpenRouter](https://openrouter.ai) — using a structured-output
-   model with a fallback — to write a short, plain-English explanation grounded
-   only in the page's real content.
+   model with a fallback — to explain what the site does, why it helps, and how
+   someone might use it, grounded in the page's real content.
 4. The result is cached by Next.js and optionally in Redis, then rendered
    server-side on repeat visits.
 

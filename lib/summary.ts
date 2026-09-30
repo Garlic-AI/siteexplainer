@@ -3,6 +3,7 @@ import { unstable_cache } from "next/cache";
 import { getRedis } from "./redis";
 import { fetchSiteContent, SiteFetchError } from "./fetch-site";
 import { generateExplanation } from "./openrouter";
+import type { SiteExplanation } from "./openrouter";
 import type { NormalizedTarget } from "./url";
 
 /**
@@ -27,13 +28,14 @@ const LATEST_LIST = "se:latest"; // recent slugs, for the home page list
 const LATEST_MAX = 40;
 
 // Bump to invalidate every Data-Cache explanation (e.g. after a prompt change).
-const CACHE_VERSION = "v2";
+const EXPLANATION_VERSION = 5;
 
 export type StoredPage = {
   url: string;
   slug: string;
   title: string;
-  summary: string;
+  explanation: SiteExplanation;
+  version: typeof EXPLANATION_VERSION;
   createdAt: number;
 };
 
@@ -47,7 +49,8 @@ export const getStoredPage = cache(async (slug: string): Promise<StoredPage | nu
   const redis = getRedis();
   if (!redis) return null;
   try {
-    return await redis.get<StoredPage>(PAGE_PREFIX + slug);
+    const stored = await redis.get<StoredPage>(PAGE_PREFIX + slug);
+    return stored?.version === EXPLANATION_VERSION ? stored : null;
   } catch (err) {
     console.error("[summary] redis read failed:", err);
     return null;
@@ -86,19 +89,20 @@ function generatePageCached(target: NormalizedTarget): Promise<StoredPage> {
   return unstable_cache(
     async () => {
       const content = await fetchSiteContent(target.url);
-      const summary = await generateExplanation(target.url, content);
+      const explanation = await generateExplanation(target.url, content);
       const page: StoredPage = {
         url: target.url,
         slug: target.slug,
         title: content.title,
-        summary,
+        explanation,
+        version: EXPLANATION_VERSION,
         createdAt: Date.now(),
       };
       // Best-effort durable copy for the sitemap / latest list (no-op without Redis).
       await persist(page);
       return page;
     },
-    ["explanation", CACHE_VERSION, target.slug],
+    ["explanation", String(EXPLANATION_VERSION), target.slug],
     { tags: [`explanation:${target.slug}`] },
   )();
 }

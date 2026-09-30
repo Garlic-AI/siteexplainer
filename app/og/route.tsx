@@ -17,7 +17,7 @@ export async function GET(req: Request) {
   if (target) {
     try {
       const stored = await getStoredPage(target.slug);
-      if (stored?.summary) sub = clamp(stored.summary, 165);
+      if (stored?.explanation.overview) sub = clamp(stored.explanation.overview, 165);
     } catch {
       /* fall back to the tagline */
     }

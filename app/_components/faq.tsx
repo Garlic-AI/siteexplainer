@@ -13,7 +13,7 @@ const FAQ_ITEMS = [
   },
   {
     q: "How does it work under the hood?",
-    a: "We fetch the page's own HTML, strip it down to the meaningful text, and pass that to an AI model to summarize. We never make things up — the explanation is grounded in the page's real content.",
+    a: "We fetch the page's own HTML, strip it down to the meaningful text, and use an AI model to explain it. Descriptions are based on the page; examples illustrate possible uses, not verified customer stories.",
   },
   {
     q: "Is it accurate?",

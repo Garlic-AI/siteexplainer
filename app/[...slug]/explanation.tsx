@@ -2,7 +2,7 @@ import Link from "next/link";
 import { getOrCreateExplanation } from "@/lib/summary";
 import type { NormalizedTarget } from "@/lib/url";
 import { ShareRow } from "../_components/share-button";
-import { ExternalIcon, SparklesIcon } from "../_components/icons";
+import { ExternalIcon } from "../_components/icons";
 
 /**
  * Async server component that resolves the explanation. Rendered inside a Suspense
@@ -28,17 +28,28 @@ export async function Explanation({ target }: { target: NormalizedTarget }) {
   }
 
   const { page } = result;
+  const { overview, whatItDoes, whyUseful, example, developerDetails } = page.explanation;
+  const sections = [
+    { title: "What it does", text: whatItDoes },
+    { title: "Why it's useful", text: whyUseful },
+    { title: "One way to use it", text: example },
+    { title: "For developers", text: developerDetails },
+  ].filter((section) => section.text);
 
   return (
     <div>
       <div className="raised rounded-xl p-6 sm:p-8">
-        <div className="mb-4 flex items-center gap-2 text-sm text-accent">
-          <SparklesIcon width={16} height={16} />
-          <span className="font-medium">In plain English</span>
-        </div>
-        <p className="text-pretty text-lg leading-relaxed text-ink">
-          {page.summary}
+        <p className="text-pretty text-xl font-medium leading-relaxed text-ink">
+          {overview}
         </p>
+        <div className="mt-7 space-y-6">
+          {sections.map(({ title, text }) => (
+            <section key={title}>
+              <h2 className="text-sm font-semibold text-ink">{title}</h2>
+              <p className="mt-2 text-pretty leading-relaxed text-muted">{text}</p>
+            </section>
+          ))}
+        </div>
         <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-5">
           <ShareRow host={target.host} slug={target.slug} />
           <a
@@ -54,7 +65,7 @@ export async function Explanation({ target }: { target: NormalizedTarget }) {
       </div>
 
       <p className="mt-3 px-1 text-xs text-faint">
-        Grounded in the site's own content.{" "}
+        Based on the site's content. Examples illustrate possible uses.{" "}
         <Link href="/" className="underline hover:text-muted">Explain another site →</Link>
       </p>
     </div>

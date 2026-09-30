@@ -1,12 +1,12 @@
 import type { SiteContent } from "./fetch-site";
 
-/** Generate a short explanation through OpenRouter and accept only a finished answer. */
+/** Generate a structured explanation through OpenRouter and accept only a finished answer. */
 
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
 const GEN_TIMEOUT_MS = 30_000;
 
 // Separate providers give a failed or malformed response a second path.
-const DEFAULT_MODELS = ["openai/gpt-4.1-mini", "anthropic/claude-haiku-4.5"];
+const DEFAULT_MODELS = ["openai/gpt-4.1", "anthropic/claude-haiku-4.5"];
 const MODEL_OVERRIDE = process.env.OPENROUTER_MODEL;
 const RESPONSE_FORMAT = {
   type: "json_schema",
@@ -15,8 +15,14 @@ const RESPONSE_FORMAT = {
     strict: true,
     schema: {
       type: "object",
-      properties: { explanation: { type: "string" } },
-      required: ["explanation"],
+      properties: {
+        overview: { type: "string" },
+        whatItDoes: { type: "string" },
+        whyUseful: { type: "string" },
+        example: { type: "string" },
+        developerDetails: { type: "string" },
+      },
+      required: ["overview", "whatItDoes", "whyUseful", "example", "developerDetails"],
       additionalProperties: false,
     },
   },
@@ -24,28 +30,31 @@ const RESPONSE_FORMAT = {
 
 export class GenerationError extends Error {}
 
-// Tuned to answer one question: "what the heck does this company/site actually do?"
-// Concrete, jargon-free, grounded only in the page text. Voice discipline (plain
-// punctuation, no preamble, say-so-if-unsure) is modeled on a good texting-assistant
-// prompt; the format anchor keeps small free models on target.
-const SYSTEM_PROMPT = `You are SiteExplainer. Someone just landed on a confusing website and wants one thing: a straight answer to "what the heck does this actually do?" Answer it the way you'd explain it to a smart friend in ten seconds.
+export type SiteExplanation = {
+  overview: string;
+  whatItDoes: string;
+  whyUseful: string;
+  example: string;
+  developerDetails: string;
+};
 
-You are given the URL and the page's own text (title, meta description, and stripped body copy that may include nav, footer, and marketing noise). Work ONLY from that text. Never invent products, customers, funding, metrics, or features that the text doesn't support.
+const SYSTEM_PROMPT = `You are SiteExplainer. Help someone decide what an unfamiliar website offers and whether it is useful to them. Explain the product or page in clear, concrete language.
 
-Write the explanation like this:
-- Open with the single clearest sentence: what this is and who it's for. Name the category in normal words ("a password manager", "a hosting platform for websites", "an issue tracker for software teams"). Strip the company's own buzzwords (no "next-gen", "synergy", "empowering", "revolutionize", "seamless").
-- Then one or two sentences on what you actually do with it, or why someone would use it, in concrete terms.
-- If it's plainly a particular kind of page (docs, pricing, a personal portfolio, a blog, an online store), say so.
-- 40 to 70 words total. No preamble, no markdown, no bullet points, no quotes, no headings. Do not start with "This website" or "This site". Plain punctuation only; never use em dashes.
-- Be confident and neutral. If the page is too vague to tell what it does, say plainly that the site doesn't make it clear.
+Use only the supplied URL, title, description, and page text. The text may contain navigation and marketing noise. Do not invent features, API names, endpoints, customers, prices, or results. A hypothetical example may combine features the page actually describes, but must not sound like a verified customer story. If the page is a blog, documentation, store, portfolio, or other specific page type, say so rather than treating it as a software product.
 
-Example of the target style:
-"Stripe is payment infrastructure for online businesses. It gives developers APIs and prebuilt tools to accept card and bank payments, run subscriptions and payouts, and fight fraud, so a company can add checkout to its site or app without building a payment system itself. The page shown is its main product and marketing homepage."`;
+Fill the response fields without repeating the same feature list:
+- overview: One sentence naming what this is, who it serves, and its main job. Start with the site's name or clear category, not "This website". At most 30 words.
+- whatItDoes: Two or three sentences showing the main workflow and how the important pieces fit together. Choose the most useful details instead of listing every feature. Save API and SDK specifics for developerDetails. At most 65 words.
+- whyUseful: One sentence about the practical problem it solves or work it simplifies. Be specific about the benefit; avoid unsupported performance claims and generic praise. At most 30 words, or an empty string if the page does not support an answer.
+- example: One specific, plausible use of the described features, phrased as a possibility ("For example, ..."). At most 35 words, or an empty string if there is too little evidence.
+- developerDetails: For developer-facing products only, name an API, SDK, integration, data model, or deployment path the page actually mentions and one concrete operation it enables. Explain what a developer would do with that interface; generic claims about "easy integration" are not useful. Do not infer setup parameters, package names, or code absent from the page. Do not attribute a feature's deployment or administration to an SDK unless the page explicitly says that SDK handles it. At most 40 words, or an empty string if no technical detail is supported.
+
+Aim for 140 to 190 words overall when the page supports it. Be shorter for sparse pages. Use plain paragraphs, no markdown or headings inside fields. If the page is too vague, say what is unclear instead of filling sections with guesses.`;
 
 export async function generateExplanation(
   url: string,
   content: SiteContent,
-): Promise<string> {
+): Promise<SiteExplanation> {
   const apiKey = process.env.OPENROUTER_API_KEY;
   if (!apiKey) {
     throw new GenerationError("OPENROUTER_API_KEY is not configured.");
@@ -72,7 +81,7 @@ export async function generateExplanation(
   const models = MODEL_OVERRIDE ? [MODEL_OVERRIDE] : DEFAULT_MODELS;
   for (const [index, model] of models.entries()) {
     try {
-      return postProcess(await callOpenRouter(apiKey, { model, messages }));
+      return await callOpenRouter(apiKey, { model, messages });
     } catch (err) {
       if (index === models.length - 1) throw err;
       console.warn(`[openrouter] ${model} failed, trying fallback:`, err);
@@ -84,7 +93,7 @@ export async function generateExplanation(
 async function callOpenRouter(
   apiKey: string,
   extra: Record<string, unknown>,
-): Promise<string> {
+): Promise<SiteExplanation> {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), GEN_TIMEOUT_MS);
 
@@ -102,7 +111,7 @@ async function callOpenRouter(
       },
       body: JSON.stringify({
         temperature: 0.3,
-        max_tokens: 260,
+        max_tokens: 700,
         response_format: RESPONSE_FORMAT,
         ...extra,
       }),
@@ -128,14 +137,35 @@ async function callOpenRouter(
   }
   let explanation: unknown;
   try {
-    explanation = JSON.parse(choice.message.content).explanation;
+    explanation = JSON.parse(choice.message.content);
   } catch {
     throw new GenerationError("OpenRouter returned an invalid explanation.");
   }
-  if (typeof explanation !== "string" || !explanation.trim()) {
+  if (!explanation || typeof explanation !== "object" || Array.isArray(explanation)) {
+    throw new GenerationError("OpenRouter returned an invalid explanation.");
+  }
+  const fields = explanation as Record<string, unknown>;
+  const { overview, whatItDoes, whyUseful, example, developerDetails } = fields;
+  if (
+    typeof overview !== "string" || !overview.trim() ||
+    typeof whatItDoes !== "string" || !whatItDoes.trim() ||
+    typeof whyUseful !== "string" ||
+    typeof example !== "string" ||
+    typeof developerDetails !== "string"
+  ) {
+    throw new GenerationError("OpenRouter returned an incomplete explanation.");
+  }
+  const result = {
+    overview: postProcess(overview),
+    whatItDoes: postProcess(whatItDoes),
+    whyUseful: postProcess(whyUseful),
+    example: postProcess(example),
+    developerDetails: postProcess(developerDetails),
+  };
+  if (!result.overview || !result.whatItDoes) {
     throw new GenerationError("OpenRouter returned an empty explanation.");
   }
-  return explanation;
+  return result;
 }
 
 /** Tidy the model output: strip wrapping quotes, normalize odd hyphens/whitespace. */
