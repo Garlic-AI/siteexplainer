@@ -9,22 +9,22 @@ cached page at **`siteexplainer.com/<url>`** (e.g.
 
 1. You paste a URL (or go straight to `siteexplainer.com/<url>`).
 2. We fetch the page's own HTML and distill it down to the meaningful text.
-3. We send that to [OpenRouter](https://openrouter.ai) — by default the **free**
-   models (`openrouter/free` + a fallback list of free instruct models) — to write
-   a short, plain-English explanation grounded only in the page's real content.
-4. The result is cached in Redis forever and rendered server-side, so the page
-   loads instantly and is fully indexable.
+3. We send that to [OpenRouter](https://openrouter.ai) — using a structured-output
+   model with a fallback — to write a short, plain-English explanation grounded
+   only in the page's real content.
+4. The result is cached by Next.js and optionally in Redis, then rendered
+   server-side on repeat visits.
 
-Because generation runs on free models, there's no per-request cost — OpenRouter's
-own free-tier limits are the rate limiter, so the app has no rate-limiting code.
+Generation uses paid models and consumes OpenRouter credits. Incomplete or malformed
+answers are rejected rather than saved as permanent explanations.
 
 ## Stack
 
 - **Next.js 16** (App Router, React 19, server components + streaming)
 - **Tailwind CSS v4**
-- **OpenRouter** free models for generation (clean instruct models with automatic
-  fallback when one is rate-limited; pin one via `OPENROUTER_MODEL`)
-- **Upstash Redis** — caches explanations and the "recently explained" list
+- **OpenRouter** structured-output models for generation, with a provider fallback
+  (pin one via `OPENROUTER_MODEL`)
+- **Upstash Redis** (optional) — durable explanations and the "recently explained" list
 - Deployed on **Vercel**
 
 ## Running locally
@@ -38,7 +38,7 @@ cp .env.example .env
 - `OPENROUTER_API_KEY` — from https://openrouter.ai/keys (required)
 - `UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` — optional cache; create a
   free DB at https://console.upstash.com
-- `OPENROUTER_MODEL` — optional, pin a single model instead of the free fallback list
+- `OPENROUTER_MODEL` — optional, pin a JSON-schema-capable model instead of the fallback pair
 - `NEXT_PUBLIC_SITE_URL` — your public origin (used for canonical/OG + sitemap)
 
 Then:
@@ -48,8 +48,8 @@ npm install
 npm run dev
 ```
 
-The app runs at `http://localhost:3000`. Without Redis credentials it still
-works — it just won't cache (every visit regenerates).
+The app runs at `http://localhost:3000`. Without Redis credentials, Next.js still
+caches generated explanations; the recent list and sitemap won't be populated.
 
 ## Notes
 

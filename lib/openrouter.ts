@@ -1,27 +1,26 @@
 import type { SiteContent } from "./fetch-site";
 
-/**
- * Explanation generation via OpenRouter's free auto-router ("openrouter/free"),
- * which routes each request to a free model. There's no per-request cost, so
- * OpenRouter's own free-tier limits are our rate limiter. One non-streaming call
- * keeps the server simple — the result is cached in Redis forever per URL.
- */
+/** Generate a short explanation through OpenRouter and accept only a finished answer. */
 
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
 const GEN_TIMEOUT_MS = 30_000;
 
-// Free instruct models that follow format well, in priority order. OpenRouter tries
-// them top-to-bottom and skips any that are rate-limited upstream (the `models`
-// fallback array, capped at 3). `reasoning.exclude` keeps chain-of-thought out of
-// the answer. If all three are unavailable we retry once on the always-on free
-// auto-router. An OPENROUTER_MODEL env var overrides everything with a single model.
-const FREE_MODELS = [
-  "meta-llama/llama-3.3-70b-instruct:free",
-  "qwen/qwen3-next-80b-a3b-instruct:free",
-  "openai/gpt-oss-120b:free",
-];
-const FALLBACK_MODEL = "openrouter/free";
+// Separate providers give a failed or malformed response a second path.
+const DEFAULT_MODELS = ["openai/gpt-4.1-mini", "anthropic/claude-haiku-4.5"];
 const MODEL_OVERRIDE = process.env.OPENROUTER_MODEL;
+const RESPONSE_FORMAT = {
+  type: "json_schema",
+  json_schema: {
+    name: "site_explanation",
+    strict: true,
+    schema: {
+      type: "object",
+      properties: { explanation: { type: "string" } },
+      required: ["explanation"],
+      additionalProperties: false,
+    },
+  },
+};
 
 export class GenerationError extends Error {}
 
@@ -70,20 +69,16 @@ export async function generateExplanation(
     { role: "user", content: userPrompt },
   ];
 
-  // Primary attempt: pinned clean models (or an explicit override).
-  const primary = MODEL_OVERRIDE
-    ? { model: MODEL_OVERRIDE }
-    : { models: FREE_MODELS };
-
-  try {
-    return postProcess(await callOpenRouter(apiKey, { ...primary, messages }));
-  } catch (err) {
-    if (MODEL_OVERRIDE) throw err; // user pinned a model; don't second-guess it
-    console.warn("[openrouter] preferred models failed, falling back to auto:", err);
-    return postProcess(
-      await callOpenRouter(apiKey, { model: FALLBACK_MODEL, messages }),
-    );
+  const models = MODEL_OVERRIDE ? [MODEL_OVERRIDE] : DEFAULT_MODELS;
+  for (const [index, model] of models.entries()) {
+    try {
+      return postProcess(await callOpenRouter(apiKey, { model, messages }));
+    } catch (err) {
+      if (index === models.length - 1) throw err;
+      console.warn(`[openrouter] ${model} failed, trying fallback:`, err);
+    }
   }
+  throw new GenerationError("No generation model is configured.");
 }
 
 async function callOpenRouter(
@@ -108,8 +103,7 @@ async function callOpenRouter(
       body: JSON.stringify({
         temperature: 0.3,
         max_tokens: 260,
-        // Keep any model's chain-of-thought out of the visible answer.
-        reasoning: { exclude: true },
+        response_format: RESPONSE_FORMAT,
         ...extra,
       }),
     });
@@ -126,13 +120,22 @@ async function callOpenRouter(
   }
 
   const data = (await res.json()) as {
-    choices?: { message?: { content?: string } }[];
+    choices?: { finish_reason?: string; message?: { content?: string } }[];
   };
-  const text = data.choices?.[0]?.message?.content?.trim();
-  if (!text) {
+  const choice = data.choices?.[0];
+  if (choice?.finish_reason !== "stop" || !choice.message?.content) {
+    throw new GenerationError("OpenRouter did not finish an explanation.");
+  }
+  let explanation: unknown;
+  try {
+    explanation = JSON.parse(choice.message.content).explanation;
+  } catch {
+    throw new GenerationError("OpenRouter returned an invalid explanation.");
+  }
+  if (typeof explanation !== "string" || !explanation.trim()) {
     throw new GenerationError("OpenRouter returned an empty explanation.");
   }
-  return text;
+  return explanation;
 }
 
 /** Tidy the model output: strip wrapping quotes, normalize odd hyphens/whitespace. */
