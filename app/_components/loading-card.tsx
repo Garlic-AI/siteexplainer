@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { SparklesIcon } from "./icons";
 
 /**
  * The loading state shown while an explanation is generated. It mirrors the real
@@ -26,16 +25,18 @@ export function LoadingCard({ host }: { host?: string }) {
 
   return (
     <div className="raised rounded-xl p-6 sm:p-8" aria-busy="true" aria-live="polite">
-      <div className="mb-4 flex items-center gap-2 text-sm text-accent">
-        <SparklesIcon width={16} height={16} />
-        <span className="font-medium">In plain English</span>
-      </div>
-
       <div className="space-y-3">
-        <div className="h-4 w-full animate-pulse rounded bg-surface-2" />
-        <div className="h-4 w-[94%] animate-pulse rounded bg-surface-2" />
-        <div className="h-4 w-[88%] animate-pulse rounded bg-surface-2" />
-        <div className="h-4 w-[62%] animate-pulse rounded bg-surface-2" />
+        <div className="h-5 w-full animate-pulse rounded bg-surface-2" />
+        <div className="h-5 w-[82%] animate-pulse rounded bg-surface-2" />
+        <div className="pt-4">
+          <div className="h-4 w-36 animate-pulse rounded bg-surface-2" />
+          <div className="mt-3 h-4 w-full animate-pulse rounded bg-surface-2" />
+          <div className="mt-3 h-4 w-[90%] animate-pulse rounded bg-surface-2" />
+        </div>
+        <div className="pt-3">
+          <div className="h-4 w-28 animate-pulse rounded bg-surface-2" />
+          <div className="mt-3 h-4 w-[86%] animate-pulse rounded bg-surface-2" />
+        </div>
       </div>
 
       <div className="mt-6 flex items-center gap-2.5 text-sm text-muted">
